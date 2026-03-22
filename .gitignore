@@ -1,0 +1,15 @@
+# Copilot local rules (do not share)
+.github/copilot-instructions.md
+
+# Godot (client build artifacts)
+apps/client/.godot/
+apps/client/export/
+*.translation
+*.import
+
+# macOS
+.DS_Store
+
+# VSCode
+.vscode/
+*.code-workspace
