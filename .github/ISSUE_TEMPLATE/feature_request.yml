@@ -1,0 +1,76 @@
+name: ✨ Feature Request
+description: 새로운 기능 또는 게임 메커니즘을 제안합니다.
+title: "[Feat] "
+labels: ["enhancement", "needs-triage"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        새로운 기능 제안을 환영합니다!
+        제안의 목적과 기대 효과를 명확히 설명해주세요.
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: 관련 영역
+      options:
+        - 핵심 게임플레이 (Core Gameplay)
+        - 헬멧 시스템 (Helmet System)
+        - 총 시스템 (Gun System)
+        - 매치메이킹 (Matchmaking)
+        - 태스크 시스템 (Task System)
+        - 근접 감지 / 타이머 (Proximity / Timer)
+        - UI / HUD
+        - CCTV 관전 모드 (Spectator)
+        - 오디오 (Audio)
+        - Steam 연동 (Steam Integration)
+        - 기타 (Other)
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: 해결하려는 문제
+      description: 이 기능이 필요한 이유를 설명해주세요. 어떤 문제 또는 불편함이 있나요?
+      placeholder: "예: 플레이어가 어디서 CCTV 사각지대가 시작되는지 알 수 없어서 전략적 판단이 어렵다"
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: 제안하는 해결책
+      description: 어떻게 구현되었으면 하는지 설명해주세요.
+      placeholder: "예: CCTV 사각지대 범위를 희미한 오버레이로 표시하는 옵션 추가"
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: 대안 고려 사항
+      description: 다른 방법으로도 해결 가능한지 생각해본 것이 있다면 작성해주세요.
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: 우선순위 (제안자 관점)
+      options:
+        - 높음 — 핵심 게임플레이에 영향
+        - 중간 — 플레이 경험 개선
+        - 낮음 — 있으면 좋은 기능
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: 제출 전 확인
+      options:
+        - label: 이미 동일한 제안이 등록되어 있지 않은지 확인했습니다.
+          required: true
+        - label: 이 기능이 게임의 핵심 보안 규칙(헬멧 서버 권한 등)과 충돌하지 않는지 검토했습니다.
+          required: true
