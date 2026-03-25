@@ -7,6 +7,14 @@ apps/client/export/
 *.translation
 *.import
 
+# GodotSteam — binaries are installed locally, not committed
+apps/client/addons/godotsteam/*.dylib
+apps/client/addons/godotsteam/*.dll
+apps/client/addons/godotsteam/*.so
+apps/client/addons/godotsteam/*.framework/
+apps/client/addons/godotsteam/steam_api*
+apps/client/steam_appid.txt
+
 # macOS
 .DS_Store
 
