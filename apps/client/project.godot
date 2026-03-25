@@ -11,12 +11,14 @@ config_version=5
 [application]
 
 config/name="red-hat"
+run/main_scene="res://scenes/ui/steam_auth_test.tscn"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 config/icon="res://icon.svg"
 
 [autoload]
 
 GameState="*res://scripts/game/game_state.gd"
+ApiClient="*res://scripts/network/api_client.gd"
 
 [physics]
 

@@ -28,6 +28,18 @@ signal authenticated
 signal match_found(match_id: String)
 
 
+func _ready() -> void:
+	if not Engine.has_singleton("Steam"):
+		push_error("[GameState] Steam singleton not found — make sure you are using the GodotSteam editor")
+		return
+	var steam: Object = Engine.get_singleton("Steam")
+	var init: Dictionary = steam.steamInitEx()
+	if init["status"] != 0:
+		push_error("[GameState] Steam failed to initialize: " + str(init["verbal"]))
+	else:
+		print("[GameState] Steam initialized — app_id: %d, verbal: %s" % [steam.getAppID(), init["verbal"]])
+
+
 ## Returns true if the player holds a valid JWT (i.e. is logged in).
 func is_authenticated() -> bool:
 	return jwt != ""
