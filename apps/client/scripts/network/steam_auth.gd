@@ -63,11 +63,11 @@ func _on_ticket_received(auth_ticket: int, result: int, _ticket_size: int, ticke
 		auth_failed.emit("Ticket generation failed (result: %d)" % result)
 		return
 
-	print("[SteamAuth] Ticket received — handle: %d, size: %d bytes" % [auth_ticket, ticket.size()])
-
 	var steam: Object = Engine.get_singleton("Steam")
 	var steam_id: String = str(steam.getSteamID())
 	var ticket_hex: String = _bytes_to_hex(ticket)
+
+	print("[SteamAuth] Ticket received — handle: %d, size: %d bytes, ticket: %s" % [auth_ticket, ticket.size(), ticket_hex])
 
 	var response: Dictionary = await ApiClient.post("/auth/steam", {
 		"ticket": ticket_hex,
