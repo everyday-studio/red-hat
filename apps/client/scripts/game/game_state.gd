@@ -40,6 +40,11 @@ func _ready() -> void:
 		print("[GameState] Steam initialized — app_id: %d, verbal: %s" % [steam.getAppID(), init["verbal"]])
 
 
+func _process(_delta: float) -> void:
+	if Engine.has_singleton("Steam"):
+		Engine.get_singleton("Steam").run_callbacks()
+
+
 ## Returns true if the player holds a valid JWT (i.e. is logged in).
 func is_authenticated() -> bool:
 	return jwt != ""
