@@ -1,8 +1,4 @@
-# Copilot local rules (do not share)
-.github/copilot-instructions.md
-.github/GAME_SPEC.md
-.github/IMPLEMENTATION_STATUS.md
-.github/SCENE_SPECS.md
+# Copilot local rules
 
 # Godot (client build artifacts)
 apps/client/.godot/
