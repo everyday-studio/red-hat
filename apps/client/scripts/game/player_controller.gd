@@ -9,11 +9,20 @@ extends CharacterBody2D
 const MOVE_SPEED: float = 120.0
 
 ## Peer ID this node belongs to.
-var peer_id: int = 0
+## Default 1 = standalone/server peer ID so movement works without a network session.
+## Set this to the actual peer ID before adding the node to the scene tree.
+var peer_id: int = 1
+
+@onready var _name_label: Label = $NameLabel
+@onready var _speech_bubble: Label = $SpeechBubble
+@onready var _audio_player: AudioStreamPlayer2D = $AudioPlayer
 
 
 func _ready() -> void:
 	set_multiplayer_authority(peer_id)
+	_name_label.text = "Player"
+	_speech_bubble.text = ""
+	_speech_bubble.hide()
 
 
 func _physics_process(delta: float) -> void:

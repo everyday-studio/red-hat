@@ -12,6 +12,8 @@ extends Node
 ## The local player's entry is never inserted here.
 var _peer_colors: Dictionary = {}
 
+@onready var _helmet_sprite = $HelmetSprite
+
 
 ## Called by the server to deliver another player's helmet color.
 ## If peer_id matches the local player, the packet is silently dropped.
@@ -25,7 +27,7 @@ func receive_helmet_color(peer_id: int, color: Color) -> void:
 ## Applies the visual color to the helmet sprite of the given peer.
 func _apply_helmet_color(peer_id: int, color: Color) -> void:
 	_peer_colors[peer_id] = color
-	# TODO: find the helmet sprite node for peer_id and tint it
+	_helmet_sprite.color = color
 
 
 ## Removes a peer's color entry when they disconnect.
