@@ -1,0 +1,23 @@
+app:
+  env: "prod"
+  port: 8080
+  debug: false
+  log_level: "info"
+
+db:
+  host: "db"
+  user: ""
+  password: ""
+  port: 5432
+  dbname: "redhat"
+  sslmode: "disable"
+
+secure:
+  jwt:
+    private_key_base64: ""
+    public_key_base64: ""
+    access_expiration_min: 720  # 12 hours
+
+steam:
+  api_key: ""
+  app_id: 0

@@ -1,0 +1,85 @@
+package config
+
+import (
+	"fmt"
+	"path/filepath"
+	"runtime"
+	"strings"
+
+	"github.com/joho/godotenv"
+	"github.com/spf13/viper"
+)
+
+type Config struct {
+	App    AppConfig    `mapstructure:"app"`
+	DB     DBConfig     `mapstructure:"db"`
+	Secure SecureConfig `mapstructure:"secure"`
+	Steam  SteamConfig  `mapstructure:"steam"`
+}
+
+type AppConfig struct {
+	Env      string `mapstructure:"env"`
+	Port     int    `mapstructure:"port"`
+	Debug    bool   `mapstructure:"debug"`
+	LogLevel string `mapstructure:"log_level"`
+}
+
+type DBConfig struct {
+	Host     string `mapstructure:"host"`
+	User     string `mapstructure:"user"`
+	Password string `mapstructure:"password"`
+	Port     int    `mapstructure:"port"`
+	DBName   string `mapstructure:"dbname"`
+	SSLMode  string `mapstructure:"sslmode"`
+}
+
+type SecureConfig struct {
+	JWT JWTConfig `mapstructure:"jwt"`
+}
+
+type JWTConfig struct {
+	PrivateKey          string `mapstructure:"private_key_base64"`
+	PublicKey           string `mapstructure:"public_key_base64"`
+	AccessExpirationMin int    `mapstructure:"access_expiration_min"`
+}
+
+// SteamConfig holds Steam Web API credentials.
+// APIKey: override via STEAM_API_KEY environment variable.
+type SteamConfig struct {
+	APIKey string `mapstructure:"api_key"`
+	AppID  int    `mapstructure:"app_id"`
+}
+
+func LoadConfig(env string) (*Config, error) {
+	_, filename, _, ok := runtime.Caller(0)
+	if !ok {
+		return nil, fmt.Errorf("failed to get current file path")
+	}
+
+	currentDir := filepath.Dir(filename)
+	projectRoot := filepath.Join(currentDir, "..")
+	configPath := filepath.Join(projectRoot, "config")
+	envPath := filepath.Join(projectRoot, ".env")
+
+	if err := godotenv.Load(envPath); err != nil {
+		fmt.Printf("no env file, use system env\n")
+	}
+
+	viper.SetConfigName(fmt.Sprintf("config.%s", env))
+	viper.AddConfigPath(configPath)
+	viper.SetConfigType("yaml")
+
+	if err := viper.ReadInConfig(); err != nil {
+		return nil, fmt.Errorf("failed to read config: %w", err)
+	}
+
+	viper.AutomaticEnv()
+	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
+
+	var cfg Config
+	if err := viper.Unmarshal(&cfg); err != nil {
+		return nil, fmt.Errorf("failed to unmarshal config: %w", err)
+	}
+
+	return &cfg, nil
+}
