@@ -1,4 +1,4 @@
-# RED HAT — Scene Node Specifications
+# SOMNIUM — Scene Node Specifications
 
 > **This document changes as scene designs evolve.**
 > The agent must follow these node structures exactly when creating or modifying scenes.
@@ -14,8 +14,8 @@ CharacterBody2D  (player_controller.gd)
 ├── Sprite2D            "Sprite"        ← character pixel sprite
 ├── AnimationPlayer     "AnimationPlayer"
 ├── CollisionShape2D    "Collision"     ← capsule or rect
-├── Node2D              "HelmetAnchor"  ← helmet position offset above head
-│   └── [helmet.tscn instance]  "Helmet"
+├── Node2D              "OrbAnchor"     ← Anima Orb position offset above head
+│   └── [anima_orb.tscn instance]  "AnimaOrb"
 ├── Label               "NameLabel"     ← displays player nickname above head
 ├── Label               "SpeechBubble"  ← shows text chat above head; hidden when off-screen (node visibility)
 └── AudioStreamPlayer2D "AudioPlayer"   ← shot_or_explosion.wav
@@ -23,11 +23,11 @@ CharacterBody2D  (player_controller.gd)
 
 ---
 
-## `scenes/game/helmet.tscn`
+## `scenes/game/anima_orb.tscn`
 
 ```
-Node2D  (no script — controlled by helmet_system.gd from parent)
-└── Sprite2D  "HelmetSprite"  ← LED tint applied here via modulate
+Node2D  (no script — controlled by anima_system.gd from parent)
+└── Sprite2D  "OrbSprite"  ← orb color tint applied here via modulate
 ```
 
 ---
@@ -95,6 +95,6 @@ CanvasLayer  (hud_controller.gd)
 ```
 Control  (no script initially — populated from GameState at scene load)
 ├── Label         "WinnerLabel"   ← "WHITE escaped" / "Hunter wins"
-├── GridContainer "RoleGrid"      ← one cell per player, reveals helmet color
+├── GridContainer "RoleGrid"      ← one cell per player, reveals Anima Orb color
 └── Button        "ReturnButton"  ← returns to lobby / main menu
 ```

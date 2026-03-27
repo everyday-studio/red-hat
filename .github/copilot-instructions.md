@@ -1,4 +1,4 @@
-# RED HAT — Copilot Agent Instructions
+# SOMNIUM — Copilot Agent Instructions
 
 > **This document is the project constitution.**
 > The agent must follow all rules defined here unconditionally.
@@ -38,7 +38,7 @@ project-root/
 │   │   │   │   └── hud.tscn
 │   │   │   ├── game/
 │   │   │   │   ├── player.tscn
-│   │   │   │   ├── helmet.tscn
+│   │   │   │   ├── anima_orb.tscn
 │   │   │   │   └── world.tscn
 │   │   │   └── result/
 │   │   │       └── result_screen.tscn
@@ -51,7 +51,7 @@ project-root/
 │   │   │   │   ├── game_state.gd      ← AutoLoad singleton
 │   │   │   │   ├── game_manager.gd
 │   │   │   │   ├── player_controller.gd
-│   │   │   │   ├── helmet_system.gd   ← SERVER AUTHORITY ONLY
+│   │   │   │   ├── anima_system.gd   ← SERVER AUTHORITY ONLY
 │   │   │   │   ├── gun_system.gd
 │   │   │   │   ├── task_system.gd
 │   │   │   │   └── proximity_system.gd
@@ -61,7 +61,7 @@ project-root/
 │   │   │       └── cctv_controller.gd
 │   │   ├── assets/
 │   │   │   ├── characters/
-│   │   │   ├── helmets/
+│   │   │   ├── orbs/
 │   │   │   ├── maps/
 │   │   │   └── sounds/
 │   │   │       └── shared/
@@ -119,7 +119,7 @@ The game uses a **backend-managed matchmaking + headless Godot server** model:
 2. **Matchmaking**: The client POSTs `/matchmaking/join` and polls `GET /matchmaking/status` every 0.5s. The **Go backend** handles the matchmaking queue and decides when a group of players forms a match.
 3. **Game session**: When a match is formed, the backend spins up a **headless Godot 4 Docker container** on AWS EC2. This container acts as the authoritative game server (ENet UDP).
 4. **Client connection**: The backend returns the headless server's IP and port in the matchmaking status response. The client connects via Godot's built-in `ENetMultiplayerPeer`.
-5. **During gameplay**: All security-critical logic (helmet color assignment, gun fire resolution, timer sync) runs on the **headless server only**. The client is a thin input sender and render receiver.
+5. **During gameplay**: All security-critical logic (Anima Orb color assignment, gun fire resolution, timer sync) runs on the **headless server only**. The client is a thin input sender and render receiver.
 6. **Post-game**: The headless server POSTs the match result to `/match/result` on the backend, then shuts down.
 
 > **Important**: Steam Matchmaking / Steam Lobbies are **NOT used**. Matchmaking is entirely handled by the Go backend. GodotSteam is used **only** for Steam authentication (ticket generation) and future Steam features (achievements, overlay, etc.).
@@ -131,22 +131,22 @@ The game uses a **backend-managed matchmaking + headless Godot server** model:
 These rules must **never** be violated.
 If generating code would break any of these, the agent must stop and ask the user for direction.
 
-### Rule 1 — Helmet color is SERVER AUTHORITY ONLY
+### Rule 1 — Anima Orb color is SERVER AUTHORITY ONLY
 
-The client must **never** store, receive, read, or branch on its own helmet color.
-Helmet color data lives on the server only. The server sends render commands to other players only.
+The client must **never** store, receive, read, or branch on its own orb color.
+Anima Orb color data lives on the server only. The server sends render commands to other players only.
 
 ```gdscript
 # CORRECT
 @rpc("authority", "call_remote", "reliable")
-func receive_helmet_color(peer_id: int, color: Color) -> void:
+func receive_orb_color(peer_id: int, color: Color) -> void:
     if peer_id == multiplayer.get_unique_id():
         return  # own color → silently drop, never render
-    _apply_helmet_color(peer_id, color)
+    _apply_orb_color(peer_id, color)
 
 # WRONG — never write this
-var my_color = helmet_color         # client must not hold own color
-if my_helmet_color == Color.RED:    # never branch on own color
+var my_color = orb_color            # client must not hold own color
+if my_orb_color == Color.RED:       # never branch on own color
 ```
 
 ### Rule 2 — Always guard with is_multiplayer_authority()
@@ -199,7 +199,7 @@ This is a **core game mechanic** — players must not be able to distinguish gun
 func on_gunshot() -> void:
     $AudioPlayer.stream = SHOT_OR_EXPLOSION_SFX
 
-func on_helmet_detonation() -> void:
+func on_orb_detonation() -> void:
     $AudioPlayer.stream = SHOT_OR_EXPLOSION_SFX  # intentional, same asset
 
 # WRONG — separate files break the mechanic
@@ -310,7 +310,7 @@ func _server_resolve_fire(peer_id: int) -> void:
     if role == "hunter":
         _fire_real_bullet(peer_id)
     else:
-        _detonate_helmet(peer_id)
+        _detonate_orb(peer_id)
 ```
 
 ---
@@ -326,7 +326,7 @@ func _server_resolve_fire(peer_id: int) -> void:
 ```
 Feat/steam-auth
 Feat/matchmaking-polling
-Feat/helmet-led-system
+Feat/anima-orb-system
 Fix/proximity-timer-double-drain
 Fix/cctv-camera-lag
 Refactor/api-client-error-handling
@@ -342,7 +342,7 @@ Chore/godotsteam-plugin-setup
 ```
 feat: steam auth login flow
 feat: matchmaking polling loop
-feat: helmet led color rpc sync
+feat: anima orb color rpc sync
 fix: proximity timer double drain
 fix: gun sfx same as explosion sfx
 refactor: centralize http error handling
@@ -490,12 +490,12 @@ If the user reports an error during Step 4:
 ## 9. What the Agent Must Never Do
 
 - Modify or reference anything inside `apps/server/`
-- Store, read, compare, or render the local player's own helmet color
+- Store, read, compare, or render the local player's own Anima Orb color
 - Call `POST /match/result` from client code
 - Use `HTTPRequest` directly outside of `api_client.gd`
 - Use Godot 3 connect syntax: `connect("signal", self, "method")`
 - Omit type hints on variables or function signatures
-- Create separate audio files for gunshot vs helmet explosion
+- Create separate audio files for gunshot vs Anima Orb detonation
 - Push commits to `main` directly
 - Make assumptions when something is unclear — always ask first
 - Lump multiple unrelated changes into a single commit without briefing the user

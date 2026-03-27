@@ -1,4 +1,4 @@
-# RED HAT — Implementation Status
+# SOMNIUM — Implementation Status
 
 > **This document changes frequently.**
 > Update this file every time a script or scene is created, completed, or changed in status.
@@ -16,7 +16,7 @@
 | `scripts/network/matchmaking.gd` | 🔧 Stub | Signals defined. `join_queue()` and `_poll_status()` bodies empty — **blocked by backend** |
 | `scripts/game/game_manager.gd` | 🔧 Stub | Constants/signals defined. Timer logic, gate open, match end all empty — **blocked by backend** |
 | `scripts/game/player_controller.gd` | 🔧 Partial | Movement works. `_request_fire()` RPC body empty |
-| `scripts/game/helmet_system.gd` | 🔧 Partial | RPC drop-own-color guard implemented. `_apply_helmet_color()` is TODO (needs helmet sprite node) |
+| `scripts/game/anima_system.gd` | 🔧 Partial | RPC drop-own-color guard implemented. `_apply_orb_color()` is TODO (needs AnimaOrb sprite node) |
 | `scripts/game/gun_system.gd` | 🔧 Stub | File exists, logic not yet implemented |
 | `scripts/game/task_system.gd` | 🔧 Stub | File exists, logic not yet implemented |
 | `scripts/game/proximity_system.gd` | 🔧 Stub | Constants/signals defined. `_physics_process` and `get_nearby_players()` empty |
@@ -24,7 +24,7 @@
 | `scripts/game/monster_controller.gd` | ❌ Not created | Individual monster AI: sleep/wake state, patrol, chase, aggro. Day = dormant unless woken |
 | `scripts/game/ghost_system.gd` | ❌ Not created | Ghost roam, monster wake/distract, RED possession (exclusive, time-limited, cooldown) |
 | `scripts/game/item_system.gd` | ❌ Not created | Item spawn, pickup, carry limit, use. Feeds into individual item effects |
-| `scripts/game/portal_system.gd` | ❌ Not created | Escape portal: unlock on all tasks done, 10-sec channeling, non-WHITE instant death |
+| `scripts/game/portal_system.gd` | ❌ Not created | Escape portal: unlock on all tasks done, 10-sec channeling, non-SILVER instant death |
 | `scripts/ui/character_select.gd` | ❌ Not created | Character + customization preset selection UI before match |
 | `scripts/ui/lobby_controller.gd` | 🔧 Stub | `_on_find_match_pressed()` empty. No player list or ready UI yet |
 | `scripts/ui/hud_controller.gd` | 🔧 Stub | File exists, logic not yet implemented |
@@ -39,8 +39,8 @@
 | `scenes/ui/steam_auth_test.tscn` | ✅ Done | Dev-only test scene. Not part of the final game flow |
 | `scenes/ui/lobby.tscn` | ❌ Not created | Pre-game lobby waiting room |
 | `scenes/ui/hud.tscn` | ❌ Not created | In-game overlay (timer, task counter, chat) |
-| `scenes/game/player.tscn` | ❌ Not created | Player character with sprite, helmet, collision |
-| `scenes/game/helmet.tscn` | ❌ Not created | Helmet sprite with LED color modulation |
+| `scenes/game/player.tscn` | ❌ Not created | Player character with sprite, Anima Orb, collision |
+| `scenes/game/anima_orb.tscn` | ❌ Not created | Anima Orb sprite with color modulation |
 | `scenes/game/world.tscn` | ❌ Not created | Map root scene (tilemap, spawn points, gate) |
 | `scenes/result/result_screen.tscn` | ❌ Not created | End-game role reveal and winner announcement |
 | `scenes/game/monster.tscn` | ❌ Not created | Monster sprite + CollisionShape + AI state machine |
@@ -53,7 +53,7 @@
 The following can be fully implemented and tested **right now**, without any server:
 
 - `scenes/game/player.tscn` — sprite, movement, collision shape
-- `scenes/game/helmet.tscn` — LED color modulation sprite
+- `scenes/game/anima_orb.tscn` — orb color modulation sprite
 - `scenes/game/world.tscn` — placeholder map, spawn points
 - `scenes/ui/lobby.tscn` — layout, player list (local mock), ready button
 - `scenes/ui/hud.tscn` — timer display, task counter layout, chat bubble layout
@@ -64,7 +64,7 @@ The following can be fully implemented and tested **right now**, without any ser
 - `scripts/game/gun_system.gd` — client-side visual only (muzzle flash, bullet sprite, SFX)
 - `scripts/game/day_night_system.gd` — pure local timer + phase signal, no server needed
 - `scripts/game/monster_controller.gd` — sleep/wake state + movement AI, fully local
-- `scripts/game/ghost_system.gd` — ghost visuals, monster distract, RED possession UI (server decides outcome)
+- `scripts/game/ghost_system.gd` — ghost visuals, monster distract, CRIMSON possession UI (server decides outcome)
 - `scripts/game/item_system.gd` — local pickup collision + inventory display
 - `scripts/game/portal_system.gd` — channeling timer + visual, unlock logic driven by task_system
 - `scenes/game/monster.tscn` — sprite, collision, AI state machine
@@ -81,4 +81,4 @@ Do not implement these until the backend is ready:
 - ENet peer connection to headless server — needs IP/port from matchmaking response
 - `scripts/game/game_manager.gd` timer sync — needs server-driven timer events
 - `scripts/game/task_system.gd` server sync — task state is server-authoritative
-- `scripts/game/helmet_system.gd` RPC calls — server sends helmet colors after role assignment
+- `scripts/game/anima_system.gd` RPC calls — server sends orb colors after role assignment
